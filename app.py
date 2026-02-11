@@ -4,19 +4,20 @@ import speedtest
 st.set_page_config(page_title="Internet Speed Test", page_icon="⚡")
 
 st.title("⚡ Internet Speed Test")
-st.write("Streamlit + Python se simple speed test app")
+st.write("Streamlit + Python se updated speed test (403 fix)")
 
 if st.button("Run Speed Test"):
-    with st.spinner("Testing speed... thoda wait karo..."):
+    with st.spinner("Testing speed... please wait..."):
         try:
-            stest = speedtest.Speedtest()
+            # FIX: secure=True to avoid 403 Forbidden
+            stest = speedtest.Speedtest(secure=True)
             stest.get_best_server()
 
-            download = stest.download() / 1_000_000  # bits -> Mbps
-            upload = stest.upload() / 1_000_000      # bits -> Mbps
+            download = stest.download() / 1_000_000  # bits → Mbps
+            upload = stest.upload() / 1_000_000      # bits → Mbps
             ping = stest.results.ping
 
-            st.success("Test complete!")
+            st.success("Speed Test Completed!")
 
             col1, col2, col3 = st.columns(3)
             col1.metric("Download", f"{download:.2f} Mbps")
@@ -24,6 +25,8 @@ if st.button("Run Speed Test"):
             col3.metric("Ping", f"{ping:.0f} ms")
 
         except Exception as e:
-            st.error(f"Kuch error aaya: {e}")
+            st.error("Kuch error aaya:")
+            st.code(str(e))
+
 else:
-    st.info("Speed check karne ke liye button dabao.")
+    st.info("Speed test start karne ke liye button dabao.")
